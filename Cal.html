@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linac Vault Shielding Calculator</title>
+    <style>
+        @keyframes blink {
+            50% {
+                opacity: 0;
+            }
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            display: flex;
+            align-items: center;
+            height: 100vh;
+        }
+        .left-side {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 50%;
+        }
+        .container {
+            padding: 20px;
+            margin: 0 auto;
+            max-width: 800px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+        }
+        h1 {
+            font-size: 28px;
+            font-weight: bold;
+            color: #0056b3;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        form {
+            margin-top: 20px;
+        }
+        label {
+            color: #0056b3;
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            box-sizing: border-box;
+        }
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            padding: 12px;
+            font-size: 16px;
+            border-radius: 5px;
+            width: 100%;
+            transition: background-color 0.3s ease;
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        .right-side {
+            flex: 1;
+            background-image: url('https://phoenixmedicalconstruction.com/wp-content/uploads/2018/08/Varian4.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            height: 100vh;
+            position: relative;
+            opacity: 0.75; /* Change the opacity to 75% */
+        }
+        .results {
+            background-color: rgba(0, 128, 0, 0.7);
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            font-family: 'Arial', sans-serif;
+            color: black;
+            font-size: 20px;
+        }
+        .right-title {
+            font-size: 30px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: white;
+        }
+        .result-info {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: black;
+        }
+        .blink {
+            animation: blink 1s infinite;
+            color: red; /* Red color for the blink */
+            font-family: 'Legitimate', sans-serif; /* Change to your desired font */
+	    font-size: 36px;
+	    text-align: center; 
+        }
+    </style>
+</head>
+<body>
+    <div class="left-side">
+        <div class="container">
+            <div class="blink">
+                This calculator is only for Primary walls
+            </div>
+            <h1>Linac Vault Shielding Calculator</h1>
+    
+            <form id="shieldingCalcForm" onsubmit="calculateBarrierTransmission(); return false;">
+                <label for="area_type">Area Type:</label>
+                <select id="area_type">
+                    <option value="controlled">Controlled Area (0.2 mSv/week)</option>
+                    <option value="uncontrolled">Uncontrolled Area (0.02 mSv/week)</option>
+                </select>
+    
+                <label for="material">Shielding Material:</label>
+                <select id="material">
+                    <option value="Concrete">Concrete</option>
+                    <option value="Steel">Steel</option>
+                    <option value="Lead">Lead</option>
+                </select>
+    
+                <label for="MV">Machine Energy (MV):</label>
+                <select id="MV">
+                    <option value="4">4 MV</option>
+                    <option value="6">6 MV</option>
+                    <option value="10">10 MV</option>
+                </select>
+    
+                <label for="angleInterval">Gantry Angle Interval(U):</label>
+                <select id="angleInterval">
+                    <option value="90 degree interval">90 degree interval</option>
+                    <option value="45 degree interval">45 degree interval</option>
+                </select>
+    
+                <label for="angle">Gantry Angle(U):</label>
+                <select id="angle">
+                    <option value="0">0 degrees</option>
+                    <option value="45">45 degrees</option>
+                    <option value="90">90 degrees</option>
+                    <option value="135">135 degrees</option>
+                    <option value="180">180 degrees</option>
+                </select>
+    
+                <label for="d_primary_input">Distance to Point of Interest (d_Pri)(meters):</label>
+                <input type="number" id="d_primary_input" step="0.01" required>
+    
+                <label for="W_pri">Workload (W) (Gy/week):</label>
+                <input type="number" id="W_pri" step="0.01" required>
+    
+                <label for="T">Occupancy Factor (T):</label>
+                <select id="T">
+                    <option value="1">Full occupancy areas (T=1)</option>
+                    <option value="0.5">Adjacent treatment room, patient examination room (T=0.5)</option>
+                    <option value="0.2">Corridors, employee lounges, staff rest rooms (T=0.2)</option>
+                    <option value="0.125">Treatment vault doors (T=0.125)</option>
+                    <option value="0.05">Public toilets, unattended vending rooms, etc. (T=0.05)</option>
+                    <option value="0.025">Outdoor areas with only transient pedestrian or vehicular traffic (T=0.025)</option>
+                </select>
+    
+                <input type="submit" value="Calculate">
+            </form>
+        </div>
+    </div>
+
+    <div class="right-side">
+        <div class="results">
+            <div class="right-title">Results</div>
+            <div class="result-info" id="result_B">Barrier Transmission Factor (B_pri):</div>
+            <div class="result-info" id="result_n">Required number of TVLs (n):</div>
+            <div class="result-info" id="result_t_barrier">Total barrier thickness required (t_barrier) in cm:</div>
+        </div>
+    </div>
+
+    <script>
+        const tvlData = {
+            'Concrete': { '4': { TVL1: 35, TVLe: 30 }, '6': { TVL1: 37, TVLe: 33 }, '10': { TVL1: 41, TVLe: 37 }},
+            'Steel': { '4': { TVL1: 9.9, TVLe: 9.9 }, '6': { TVL1: 10, TVLe: 10 }, '10': { TVL1: 11, TVLe: 11 }},
+            'Lead': { '4': { TVL1: 5.7, TVLe: 5.7 }, '6': { TVL1: 5.7, TVLe: 5.7 }, '10': { TVL1: 5.7, TVLe: 5.7 }}
+        };
+
+        const uValues = {
+            '90 degree interval': { '0': 0.31, '90': 0.213, '180': 0.263 },
+            '45 degree interval': { '0': 0.256, '45': 0.058, '90': 0.159, '135': 0.04, '180': 0.23 }
+        };
+
+        function calculateBarrierTransmission() {
+            var area_type = document.getElementById('area_type').value;
+            var material = document.getElementById('material').value;
+            var MV = document.getElementById('MV').value;
+            var angleInterval = document.getElementById('angleInterval').value;
+            var angle = document.getElementById('angle').value;
+            var d_primary_input = parseFloat(document.getElementById('d_primary_input').value);
+            var W_pri = parseFloat(document.getElementById('W_pri').value);
+            var T = parseFloat(document.getElementById('T').value);
+
+            var TVL1 = tvlData[material][MV].TVL1;
+            var TVLe = tvlData[material][MV].TVLe;
+            var U_pri = uValues[angleInterval][angle]; 
+
+            var P_values = {
+                'controlled': 0.1, // 0.2 mSv/wk for controlled areas
+                'uncontrolled': 0.02 // 0.02 mSv/wk for uncontrolled areas
+            };
+
+            var P = P_values[area_type] * 1e-3; // Convert mSv to Sv
+
+            var B_pri = (P * Math.pow(d_primary_input, 2)) / (W_pri * U_pri * T);
+            var n = -Math.log10(B_pri);
+            var t_barrier = TVL1 + (n - 1) * TVLe;
+            
+            if (B_pri > 0 && !isNaN(B_pri)) {
+                document.getElementById('result_B').textContent = 'Barrier Transmission Factor (B_pri): ' + B_pri.toExponential(4);
+            } else {
+                document.getElementById('result_B').textContent = "Error: Check inputs";
+            }
+            document.getElementById('result_n').textContent = 'Required number of TVLs (n): ' + (n > 0 ? n.toFixed(2) : "Error: Check inputs");
+            document.getElementById('result_t_barrier').textContent = 'Total barrier thickness required (t_barrier) in cm: ' + (t_barrier > 0 ? t_barrier.toFixed(2) : "Error: Check inputs");
+        }
+    </script>
+</body>
+</html>
