@@ -1,9 +1,6 @@
 # Primary-Wall-Shielding-Calculator-for-LINAC-Vault
 This HTML tool assists in determining the total barrier thickness, barrier transmission factor, and the number of TVLs required based on the provided inputs.
 
-README for Linac Vault Shielding Calculator
-
-Overview
 
 The Linac Vault Shielding Calculator is a tool designed to assist in calculating the total barrier thickness, barrier transmission factor, and required TVLs (Tenth Value Layers) for primary walls based on user-provided inputs.
 
@@ -30,7 +27,7 @@ To ensure accurate results, please provide the following inputs:
 	•	Example: Full occupancy areas (T = 1), partial occupancy areas (T < 1)
 
 How to Use the Calculator
-	1.	Ensure that the Notepad file and the .html file are stored in the same folder for proper execution.
+	1.	Ensure that user should save the cal.html file for proper execution.
 	2.	Open the HTML file in a web browser.
 	3.	Enter the required shielding parameters into the respective input fields.
 	4.	Click the “Calculate” button to generate results.
